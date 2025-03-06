@@ -1,64 +1,47 @@
-# Load environment variables
 import os
 from dotenv import load_dotenv
+from langchain_groq import ChatGroq  # Groq API
+from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
-# Explicitly specify the .env path if necessary
-env_loaded = load_dotenv()
+# Load environment variables
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-HF_TOKEN = os.getenv("HF_TOKEN")
+if not GROQ_API_KEY:
+    raise ValueError("Error: Groq API Key not found. Set it in the .env file.")
 
-if not HF_TOKEN:
-    raise ValueError("❌ ERROR: Hugging Face API Token (HF_TOKEN) not found! Set it in Streamlit Secrets or .env")
-
-
-HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
-DB_FAISS_PATH = "vectorstore/db_faiss"
-
-import streamlit as st
-
+# Initialize Groq LLM Model
 def load_llm():
-    HF_TOKEN = st.secrets["HF_TOKEN"]  # Load token from Streamlit secrets
-    return HuggingFaceEndpoint(
-        repo_id="mistralai/Mistral-7B-Instruct-v0.3",
-        token=HF_TOKEN,
-        temperature=0.7,
-        top_p=0.9,
-        max_length=512
-    )
+    print("Loading Groq AI Model...")
+    return ChatGroq(model_name="llama3-8b-8192", api_key=GROQ_API_KEY)
 
-# Load FAISS index for retrieval
+# Load FAISS database for retrieval
 def load_faiss_index():
     print("Loading FAISS index...")
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    return FAISS.load_local(DB_FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
+    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    return FAISS.load_local("vectorstore/db_faiss", embedding_model, allow_dangerous_deserialization=True)
 
-# Define a structured prompt template
+# Define a prompt template
 def set_custom_prompt():
     return PromptTemplate(
-        template=(
-            """
-            You are a medical assistant. Use the provided context to answer factually.
-            - If the context does not contain the answer, say you don't know.
-            - Keep responses clear, concise, and medically accurate.
-            - Use bullet points where necessary.
-            
-            Context:
-            {context}
-            
-            Question:
-            {question}
-            
-            Answer:
-            """
-        ),
+        template="""
+        You are a medical assistant. Use the provided context to answer the question factually.
+        - If the context does not contain the answer, say you don't know.
+        - Keep responses clear, concise, and medically accurate.
+
+        Context:
+        {context}
+
+        Question:
+        {question}
+
+        Answer:
+        """,
         input_variables=["context", "question"]
     )
-
-# Format chatbot response for readability
-def format_chatbot_response(text):
-    text = text.replace("\n", "\n\n")  # Add spacing for readability
-    text = re.sub(r"(\d+)\.", r"\n**\1.**", text)  # Bold numbers for lists
-    return text.replace("-", "•")  # Convert dashes to bullet points
 
 # Create the retrieval-based QA chatbot
 def create_qa_chain():
@@ -67,22 +50,11 @@ def create_qa_chain():
     retriever = db.as_retriever(search_kwargs={"k": 3})
     prompt = set_custom_prompt()
     print("Creating QA Chain...")
+    
     return RetrievalQA.from_chain_type(
         llm=llm,
         chain_type="stuff",
         retriever=retriever,
-        return_source_documents=True,
+        return_source_documents=False,  # Do not return sources
         chain_type_kwargs={"prompt": prompt}
     )
-
-if __name__ == "__main__":
-    qa_chain = create_qa_chain()
-    while True:
-        user_query = input("\nWrite Query Here: ")
-        if user_query.lower() in ["exit", "quit"]:
-            break
-        response = qa_chain.invoke({"query": user_query})
-        print("\nChatbot Response:\n", format_chatbot_response(response["result"]))
-        print("\nSources Used:")
-        for doc in response["source_documents"]:
-            print(f"- {doc.metadata['title']}, Page {doc.metadata['page']}")

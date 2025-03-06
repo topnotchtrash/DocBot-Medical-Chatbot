@@ -1,13 +1,12 @@
+groq
+requests
 streamlit
-python-dotenv
 langchain
 langchain-community
 faiss-cpu
 huggingface-hub
 sentence-transformers
+python-dotenv
 numpy
-pandas
 pypdf
-torch
-transformers
-langchain-huggingface
+pip install -r requirements.txt
