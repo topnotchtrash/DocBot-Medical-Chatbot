@@ -9,4 +9,4 @@ sentence-transformers
 python-dotenv
 numpy
 pypdf
-
+langchain_groq
