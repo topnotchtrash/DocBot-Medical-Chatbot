@@ -14,11 +14,12 @@ if not HF_TOKEN:
 HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
 DB_FAISS_PATH = "vectorstore/db_faiss"
 
-# Load the LLM model from Hugging Face
+import streamlit as st
+
 def load_llm():
-    print("Loading Mistral-7B Model...")
+    HF_TOKEN = st.secrets["HF_TOKEN"]  # Load token from Streamlit secrets
     return HuggingFaceEndpoint(
-        repo_id=HUGGINGFACE_REPO_ID,
+        repo_id="mistralai/Mistral-7B-Instruct-v0.3",
         token=HF_TOKEN,
         temperature=0.7,
         top_p=0.9,
