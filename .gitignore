@@ -1,6 +1,10 @@
-__pycache__/
-.env
-*.db
-*.log
-venv/
+# Ignore environment folder
 medical-chatbot-env/
+
+# Ignore large model & data files
+*.dylib
+*.so
+*.pkl
+*.pdf
+*.map
+vectorstore/db_faiss/
