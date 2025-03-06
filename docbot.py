@@ -1,5 +1,10 @@
-# Set Streamlit page configuration
+import streamlit as st
+
+# Ensure this is the first Streamlit command
 st.set_page_config(page_title="DocBot - Medical Chatbot", page_icon="🩺", layout="centered")
+
+from LLM_Connect_Memory import create_qa_chain
+
 
 # Cache chatbot initialization
 @st.cache_resource
