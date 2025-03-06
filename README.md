@@ -1,89 +1,111 @@
 # 🩺 DocBot - Medical Chatbot
 
-DocBot is an AI-powered medical assistant that provides accurate and reliable answers to medical-related questions using **Mistral-7B** and a **FAISS vector database**.
+&#x20;&#x20;
+
+DocBot is an **AI-powered medical chatbot** that provides **accurate and reliable** answers to **medical-related questions**.\
+It leverages **retrieval-augmented generation (RAG)** with **FAISS vector database** and is powered by **Groq LLM API** for fast inference.
+
+## 🚀 Live Demo
+
+🔗 **Try it here:** [DocBot - Medical Chatbot](https://docbot-medical-chatbot.streamlit.app/)
 
 ---
 
-## 🚀 Features
-- Provides **fact-based** medical responses.
-- Uses **FAISS** for efficient retrieval from a medical knowledge base.
-- **Memory-enabled** chatbot for conversational interactions.
-- Clean and **interactive UI** using Streamlit.
-- Secure **environment variable management** (via `.env` file).
+## 📌 Features
+
+✅ **Conversational Chatbot** - Provides natural language medical assistance\
+✅ **RAG-Based Retrieval** - Uses FAISS to fetch context-aware responses\
+✅ **Groq API Integration** - Efficient and high-performance inference\
+✅ **Streamlit UI** - Clean, responsive, and interactive user interface\
+✅ **Session Memory** - Maintains chat history for a better user experience
 
 ---
 
-## 🛠 Installation
+## 🛠️ Tech Stack
 
-### 1️⃣ **Clone the repository**
-```bash
+- **Frontend:** Streamlit
+- **Backend:** LangChain, FAISS
+- **LLM Model:** Groq API (Llama3 / Mixtral)
+- **Vector Database:** FAISS
+- **Deployment:** Streamlit Cloud
+
+---
+
+## 📸 Screenshots
+
+### 🔹 Home Page
+
+
+
+### 🔹 Chatbot in Action
+
+
+
+---
+
+## ⚙️ Installation & Setup
+
+### 🔹 1. Clone the Repository
+
+```sh
 git clone https://github.com/sandavenishubhang/DocBot-Medical-Chatbot.git
 cd DocBot-Medical-Chatbot
 ```
 
----
+### 🔹 2. Create & Activate a Virtual Environment
 
-### 2️⃣ **Create a Virtual Environment (Recommended)**
-A virtual environment helps manage dependencies and prevents conflicts.
-
-```bash
+```sh
 python3 -m venv medical-chatbot-env
+source medical-chatbot-env/bin/activate  # On Windows use `medical-chatbot-env\Scripts\activate`
 ```
 
-Activate the virtual environment:
-- **macOS/Linux:**
-  ```bash
-  source medical-chatbot-env/bin/activate
-  ```
-- **Windows (Command Prompt):**
-  ```bash
-  medical-chatbot-env\Scripts\activate
-  ```
-- **Windows (PowerShell):**
-  ```powershell
-  .\medical-chatbot-env\Scripts\Activate.ps1
-  ```
+### 🔹 3. Install Dependencies
 
----
-
-### 3️⃣ **Install Dependencies**
-Install all required Python packages using:
-```bash
+```sh
 pip install -r requirements.txt
 ```
 
----
+### 🔹 4. Set Up Environment Variables
 
-### 4️⃣ **Set Up Environment Variables**
-You need to configure your **Hugging Face API Token** to access the Mistral-7B model.
+Create a `.env` file in the project root and add the following:
 
-1. **Create a `.env` file** from the example file:
-   ```bash
-   cp .env.example .env
-   ```
-2. **Open the `.env` file** and add your Hugging Face API key:
-   ```
-   HF_TOKEN=your_huggingface_api_token_here
-   ```
+```
+GROQ_API_KEY=your_groq_api_key
+```
 
----
+### 🔹 5. Run the Application
 
-### 5️⃣ **Run the Chatbot**
-Start the **Streamlit** app:
-```bash
+```sh
 streamlit run docbot.py
 ```
 
-This will launch the chatbot in your **web browser** at:
-```
-http://localhost:8501
-```
+The chatbot will be available at `http://localhost:8501`.
 
 ---
 
-### 🎯 **Next Steps**
-- Start asking **medical-related questions** in the input box.
-- **DocBot will generate a response** based on its knowledge.
-- The chatbot **retains conversation history** during the session.
+## 🚀 Deployment on Streamlit Cloud
 
-Let me know if you need further assistance! 🚀😊
+1. Push your code to GitHub
+2. Go to [Streamlit Cloud](https://streamlit.io/cloud)
+3. Deploy a new application by linking your GitHub repository
+4. Add necessary environment variables in Streamlit secrets
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to fork this repository and submit a pull request.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 📞 Contact
+
+For any queries, reach out via: 📧 Email: [sshubhangyadav@gmail.com](mailto\:sshubhangyadav@gmail.com)\
+🔗 Portfolio: [shubhangportfolio.vercel.app](https://shubhangportfolio.vercel.app/)
+
