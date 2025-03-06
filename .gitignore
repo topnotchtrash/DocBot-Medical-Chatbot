@@ -2,9 +2,7 @@
 medical-chatbot-env/
 
 # Ignore large model & data files
-*.dylib
-*.so
-*.pkl
-*.pdf
-*.map
-vectorstore/db_faiss/
+
+
+.env
+.env
