@@ -10,3 +10,4 @@ pandas
 pypdf
 torch
 transformers
+langchain-huggingface
