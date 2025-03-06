@@ -28,7 +28,7 @@ st.markdown("""
             width: 100%;
         }
         .stTextInput > div > div > input::placeholder {
-            color: #888888; /* Light gray placeholder for readability */
+            color: #888888;
         }
         .stButton>button, .stFormSubmitButton>button {
             border-radius: 10px;
@@ -42,25 +42,26 @@ st.markdown("""
             background-color: #45a049;
         }
         .chat-box {
-            background-color: #f9f9f9;
+            background-color: var(--background-secondary);
             padding: 12px;
             border-radius: 12px;
             font-size: 16px;
             line-height: 1.5;
-            color: black;
+            color: var(--text-color);
             border-left: 4px solid #4CAF50;
             margin-bottom: 10px;
         }
         .user-message {
             text-align: right;
-            color: #333;
+            color: var(--text-color);
             background-color: #d4fcd4;
             padding: 10px;
             border-radius: 12px;
             margin-bottom: 10px;
         }
         .bot-message {
-            background-color: #ffffff;
+            background-color: var(--background-primary); /* Adaptive background */
+            color: var(--text-color); /* Adaptive text color */
             padding: 10px;
             border-radius: 12px;
             border-left: 4px solid #4CAF50;
@@ -71,7 +72,22 @@ st.markdown("""
             text-align: center;
             padding: 10px;
             font-size: 14px;
-            color: #555;
+            color: var(--text-color);
+        }
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-primary: #1E1E1E;
+                --background-secondary: #252525;
+                --text-color: #FFFFFF;
+            }
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --background-primary: #ffffff;
+                --background-secondary: #f9f9f9;
+                --text-color: #000000;
+            }
         }
     </style>
 """, unsafe_allow_html=True)
@@ -116,7 +132,7 @@ with input_container:
     if submitted and user_query:
         with st.spinner("Thinking..."):
             response = qa_chain.invoke({"query": user_query})
-        
+
         # Remove formal opening statement
         formatted_response = response["result"]
         if formatted_response.startswith("Based on the provided context, I can answer the question factually."):
