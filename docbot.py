@@ -12,7 +12,7 @@ def load_qa_chain():
 
 qa_chain = load_qa_chain()
 
-# Apply Custom CSS for chat-style UI
+# Apply Custom CSS for chat-style UI with dark mode fixes
 st.markdown("""
     <style>
         body {
@@ -21,12 +21,16 @@ st.markdown("""
         .stTextInput > div > div > input {
             border-radius: 15px;
             padding: 12px;
-            background-color: #f9f9f9;
+            background-color: #ffffff; /* Light background for better visibility */
+            color: #000000; /* Dark text for contrast */
             border: 2px solid #4CAF50;
             font-size: 16px;
             width: 100%;
         }
-        .stButton>button {
+        .stTextInput > div > div > input::placeholder {
+            color: #888888; /* Light gray placeholder for readability */
+        }
+        .stButton>button, .stFormSubmitButton>button {
             border-radius: 10px;
             background-color: #4CAF50;
             color: white;
@@ -34,7 +38,7 @@ st.markdown("""
             padding: 10px 20px;
             width: 100%;
         }
-        .stButton>button:hover {
+        .stButton>button:hover, .stFormSubmitButton>button:hover {
             background-color: #45a049;
         }
         .chat-box {
@@ -85,35 +89,45 @@ st.markdown("""
 - How can I boost my **immune system naturally**?
 - What’s the best way to **lower cholesterol**?
 - How can I improve my **sleep quality**?
-- What are common **vitamin deficiencies**?""")
+- What are common **vitamin deficiencies**?
+""")
 
 # Initialize session state for chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # Display chat history
-for message in st.session_state.messages:
-    role, content = message["role"], message["content"]
-    if role == "user":
-        st.markdown(f"""<div class='user-message'><b>👤 You:</b> {content}</div>""", unsafe_allow_html=True)
-    else:
-        st.markdown(f"""<div class='bot-message'><b>🤖 DocBot:</b> {content}</div>""", unsafe_allow_html=True)
+chat_container = st.container()
+with chat_container:
+    for message in st.session_state.messages:
+        role, content = message["role"], message["content"]
+        if role == "user":
+            st.markdown(f"""<div class='user-message'><b>👤 You:</b> {content}</div>""", unsafe_allow_html=True)
+        else:
+            st.markdown(f"""<div class='bot-message'><b>🤖 DocBot:</b> {content}</div>""", unsafe_allow_html=True)
 
-# User input
-user_query = st.text_input("Ask me a medical question:", placeholder="Type your medical query here...")
+# Input field always at the bottom
+input_container = st.container()
+with input_container:
+    with st.form("chat_form", clear_on_submit=True):
+        user_query = st.text_input("Ask me a medical question:", placeholder="Type your medical query here...")
+        submitted = st.form_submit_button("Get Answer")
 
-if st.button("Get Answer") and user_query:
-    with st.spinner("Fetching answer..."):
-        response = qa_chain.invoke({"query": user_query})
+    if submitted and user_query:
+        with st.spinner("Thinking..."):
+            response = qa_chain.invoke({"query": user_query})
+        
+        # Remove formal opening statement
+        formatted_response = response["result"]
+        if formatted_response.startswith("Based on the provided context, I can answer the question factually."):
+            formatted_response = formatted_response.replace("Based on the provided context, I can answer the question factually.", "").strip()
 
-    formatted_response = response["result"].replace("\n", "<br>")
+        # Store user query and response in session state
+        st.session_state.messages.append({"role": "user", "content": user_query})
+        st.session_state.messages.append({"role": "bot", "content": formatted_response})
 
-    # Store user query and response in session state
-    st.session_state.messages.append({"role": "user", "content": user_query})
-    st.session_state.messages.append({"role": "bot", "content": formatted_response})
-
-    # Display the chatbot response
-    st.markdown(f"""<div class='bot-message'><b>🤖 DocBot:</b> {formatted_response}</div>""", unsafe_allow_html=True)
+        # Refresh chat by reloading page elements
+        st.rerun()
 
 # Footer
 st.markdown("""
