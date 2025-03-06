@@ -1,8 +1,15 @@
 # Load environment variables
-load_dotenv()
+import os
+from dotenv import load_dotenv
+
+# Explicitly specify the .env path if necessary
+env_loaded = load_dotenv()
+
 HF_TOKEN = os.getenv("HF_TOKEN")
+
 if not HF_TOKEN:
-    raise ValueError("Hugging Face API Token not found. Set it in the .env file.")
+    raise ValueError("❌ ERROR: Hugging Face API Token (HF_TOKEN) not found! Set it in Streamlit Secrets or .env")
+
 
 HUGGINGFACE_REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
 DB_FAISS_PATH = "vectorstore/db_faiss"
