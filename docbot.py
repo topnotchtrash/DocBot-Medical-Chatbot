@@ -1,16 +1,16 @@
 import os
 import streamlit as st
-from LLM_Connect_Memory import create_qa_chain
+from LLM_Connect_Memory import MedicalQA
 
 # Set up Streamlit page config
 st.set_page_config(page_title="DocBot - Medical Chatbot", page_icon="🩺", layout="centered")
 
 # Cache chatbot initialization
 @st.cache_resource
-def load_qa_chain():
-    return create_qa_chain()
+def load_medical_qa():
+    return MedicalQA()
 
-qa_chain = load_qa_chain()
+medical_qa = load_medical_qa()
 
 # Apply Custom CSS for chat-style UI with dark mode fixes
 st.markdown("""
@@ -107,7 +107,7 @@ st.markdown("""
 ### 💡 **Try Asking DocBot:**
 - What are the early signs of **diabetes**?
 - How can I boost my **immune system naturally**?
-- What’s the best way to **lower cholesterol**?
+- What's the best way to **lower cholesterol**?
 - How can I improve my **sleep quality**?
 - What are common **vitamin deficiencies**?
 """)
@@ -135,16 +135,11 @@ with input_container:
 
     if submitted and user_query:
         with st.spinner("Thinking..."):
-            response = qa_chain.invoke({"query": user_query})
-
-        # Remove formal opening statement
-        formatted_response = response["result"]
-        if formatted_response.startswith("Based on the provided context, I can answer the question factually."):
-            formatted_response = formatted_response.replace("Based on the provided context, I can answer the question factually.", "").strip()
+            response = medical_qa.answer_question(user_query)
 
         # Store user query and response in session state
         st.session_state.messages.append({"role": "user", "content": user_query})
-        st.session_state.messages.append({"role": "bot", "content": formatted_response})
+        st.session_state.messages.append({"role": "bot", "content": response})
 
         # Refresh chat by reloading page elements
         st.rerun()

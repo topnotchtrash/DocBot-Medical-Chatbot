@@ -35,7 +35,7 @@ class DataFetcher:
         response = requests.get(url)
 
         if response.status_code != 200:
-            print(f"❌ Failed to fetch data for query: {query}")
+            print(f" Failed to fetch data for query: {query}")
             return []
 
         soup = BeautifulSoup(response.content, "lxml")
@@ -62,7 +62,7 @@ class DataFetcher:
                     })
 
             except Exception as e:
-                print(f"⚠️ Failed to parse document: {e}")
+                print(f" Failed to parse document: {e}")
                 continue
 
         return articles
@@ -91,7 +91,7 @@ class DataFetcher:
                 time.sleep(0.5)  # polite delay
 
             except Exception as e:
-                print(f"❌ Error fetching data for {topic}: {e}")
+                print(f" Error fetching data for {topic}: {e}")
 
         return all_data
 
@@ -125,4 +125,4 @@ if __name__ == "__main__":
     with open("topic_article_store.json", "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
-    print("✅ All cleaned topic data saved to 'topic_article_store.json'")
+    print(" All cleaned topic data saved to 'topic_article_store.json'")
